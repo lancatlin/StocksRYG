@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>股票紅綠燈</title>
+    </head>
+    <body>
+        <h1>股票紅綠燈</h1>
+        <p>請輸入股票號碼</p>
+        <form action="/" method="get">
+            股票號碼<input type="text" name="stock_number" id="" value="{{stock.number}}">
+            採計年數<input type="number" name="years" id="" value="{{stock.years}}">
+            <input type="submit" value="查詢">
+        </form>
+        {%if stock%}
+        <table>
+            <tbody>
+                <tr>
+                    <th>股票名稱</th>
+                    <th>現價</th>
+                    <th>平均現金股利</th>
+                    <th>平均股票股利</th>
+                    <th>總投資報酬率</th>
+                </tr>
+                <tr>
+                    <td>{{stock.name}}</td>
+                    <td>{{stock.price}}</td>
+                    <td>{{stock.money}}</td>
+                    <td>{{stock.dividend}}</td>
+                    <td>{{stock.total}}%</td>
+                </tr>
+            </tbody>
+        </table>
+        {%endif%}
+    </body>
+</html>
