@@ -23,9 +23,9 @@
                 <tr>
                     <td>{{stock.name}}</td>
                     <td>{{stock.price}}</td>
-                    <td style="background-color: {{stock.color(1)}}">{{stock.ROI(1)}}%</td>
-                    <td style="background-color: {{stock.color(5)}}">{{stock.ROI(5)}}%</td>
-                    <td style="background-color: {{stock.color(10)}}">{{stock.ROI(10)}}%</td>
+                    {% for i in [1, 5, 10] %}
+                    <td style="background-color: {{stock.light(i)}}">{{stock.ROI(i)}}%</td>
+                    {% endfor %}
                 </tr>
             </tbody>
         </table>

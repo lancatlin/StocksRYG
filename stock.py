@@ -4,10 +4,10 @@ import sys
 from fake_useragent import UserAgent
 from enum import Enum
 
-class StockGrade(Enum):
-    RED = 0
-    YELLOW = 1
-    GREEN = 2
+class StockGrade:
+    RED = '#ff3c38' 
+    YELLOW = '#fde74c'
+    GREEN = '#81e979'
 
 class Stock:
     def __init__(self, stockNumber):
@@ -57,15 +57,6 @@ class Stock:
         else:
             return StockGrade.RED
     
-    def color(self, years):
-        roi = self.ROI(years)
-        if roi > 8:
-            return '#81e979'
-        elif roi > 5:
-            return '#fde74c'
-        else:
-            return '#ff3c38' 
-
     def ROI(self, years):
         allMoney = 0
         allDividend = 0
