@@ -2,24 +2,20 @@ import requests
 from bs4 import BeautifulSoup
 import sys
 from fake_useragent import UserAgent
+from enum import Enum
+
+class StockGrade(Enum):
+    RED = 0
+    YELLOW = 1
+    GREEN = 2
 
 class Stock:
-    def __init__(self, stockNumber, years):
+    def __init__(self, stockNumber):
         price = self.getPrice(stockNumber)
         html = self.req(stockNumber)
-        dividend = self.parse(html)
-        allMoney = 0
-        allDividend = 0
-        for d in dividend[0:years]:
-            allMoney += d["money"]
-            allDividend += d['stock']
-        totalReturn = ((allMoney / years) + (allDividend / years) * price  / 10) / price * 100
+        self.years = self.parse(html)
         self.number = stockNumber
-        self.years = years
         self.price = price
-        self.money = round(allMoney / years, 2)
-        self.dividend = round(allDividend / years, 2)
-        self.total = round(totalReturn, 2)
 
     def req(self, stockNumber):
         ua = UserAgent()
@@ -38,7 +34,7 @@ class Stock:
             y = int(data[0].contents[0])
             money = float(data[1].contents[0])
             stock = float(data[4].contents[0])
-            result.append({"year": y, "money": money, "stock": stock})
+            result.append(Year(y, money, stock))
         return result
 
     def getPrice(self, stockNumber):
@@ -51,7 +47,39 @@ class Stock:
         tr = soup.find('tr', bgcolor='#ffffff')
         td = tr.find_all('td')[3]
         return float(td.contents[0])
+
+    def light(self, years):
+        roi = self.ROI(years)
+        if roi > 8:
+            return StockGrade.GREEN
+        elif roi > 5:
+            return StockGrade.YELLOW
+        else:
+            return StockGrade.RED
     
+    def color(self, years):
+        roi = self.ROI(years)
+        if roi > 8:
+            return '#81e979'
+        elif roi > 5:
+            return '#fde74c'
+        else:
+            return '#ff3c38' 
+
+    def ROI(self, years):
+        allMoney = 0
+        allDividend = 0
+        for d in self.years[0:years]:
+            allMoney += d.money
+            allDividend += d.dividend
+        return round(((allMoney / years) + (allDividend / years) * self.price  / 10) / self.price * 100, 2)
+
+class Year:
+    def __init__(self, year, money, dividend):
+        self.year = year
+        self.money = money
+        self.dividend = dividend
+
 if __name__ == '__main__':
     argv = sys.argv
     if len(argv) == 3:

@@ -5,15 +5,13 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     stock_number = request.args.get('stock_number')
-    years = request.args.get('years')
-    if stock_number == None or years == None: 
+    if stock_number == None: 
         return render_template('index.html', stock=None)
     try:
-        years = int(years) 
+        stock = Stock(stock_number)
     except:
-        years = 1
-    stock = Stock(stock_number, years)
+        return render_template('not_found.html', name=stock_number)
     return render_template('index.html', stock=stock)
         
 if __name__ == "__main__":
-    app.run(debug = True)
+    app.run(host='0.0.0.0', port='8080', debug = True)
